@@ -1,4 +1,4 @@
-import { Bell, User, X, CheckCheck, LogOut, Settings, ChevronDown } from "lucide-react";
+import { Bell, User, X, CheckCheck, LogOut, Settings, ChevronDown, Menu } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -82,7 +82,7 @@ function useOutsideClick(
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-export default function Header({ title }: { title: string }) {
+export default function Header({ title, setMobileSidebarOpen }: { title: string; setMobileSidebarOpen?: (open: boolean) => void }) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [notifications, setNotifications] =
@@ -117,10 +117,20 @@ export default function Header({ title }: { title: string }) {
 
   return (
     <>
-      <header className="flex pt-8 pb-4 items-center justify-between border-b border-white/5 bg-background/50 px-4 sm:px-8 backdrop-blur-md relative z-50">
-      {/* ── Left: Page title ── */}
-      <div>
-        <h1 className="text-xl font-bold text-white font-heading">{title}</h1>
+      <header className="flex pt-6 pb-4 items-center justify-between border-b border-white/5 bg-background/50 px-4 sm:px-8 backdrop-blur-md relative z-50">
+      
+      {/* ── Left: Menu Toggle + Page title ── */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => setMobileSidebarOpen?.(true)}
+          className="lg:hidden p-2 -ml-2 text-text-secondary hover:text-white transition-colors"
+          aria-label="Open Menu"
+        >
+          <Menu size={24} />
+        </button>
+        <h1 className="text-sm sm:text-lg lg:text-xl font-bold text-white font-heading truncate max-w-[150px] sm:max-w-none">
+          {title}
+        </h1>
       </div>
 
       {/* ── Right: actions ── */}
@@ -149,8 +159,8 @@ export default function Header({ title }: { title: string }) {
           {notifOpen && (
             <div
               id="notification-dropdown"
-              className="absolute right-0 mt-3 w-[340px] sm:w-[380px] rounded-2xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden"
-              style={{ maxHeight: "480px" }}
+              className="fixed inset-x-4 top-20 sm:absolute sm:right-0 sm:top-full sm:mt-3 sm:w-[380px] rounded-2xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden z-[100]"
+              style={{ maxHeight: "calc(100vh - 120px)" }}
             >
               {/* Header row */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">

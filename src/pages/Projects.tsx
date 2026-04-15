@@ -187,7 +187,7 @@ export default function Projects() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={18} />
           <input
             type="text"
-            placeholder="Filter project nodes by ID, name or category..."
+            placeholder="Filter project nodes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-xl border border-white/5 bg-surface/30 px-10 py-2.5 text-sm text-white placeholder:text-text-secondary focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -202,82 +202,85 @@ export default function Projects() {
           )}
         </div>
 
-        {/* Status filter */}
-        <div className="relative" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={() => { setStatusOpen((v) => !v); setCategoryOpen(false); }}
-            className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-medium transition-all ${
-              statusFilter !== 'All Status'
-                ? 'border-primary/40 bg-primary/10 text-primary'
-                : 'border-white/5 bg-surface/30 text-text-secondary hover:text-white'
-            }`}
-          >
-            <Filter size={14} />
-            {statusFilter}
-          </button>
-          <AnimatePresence>
-            {statusOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                className="absolute right-0 top-full z-50 mt-2 w-40 rounded-xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-xl overflow-hidden py-1"
-              >
-                {STATUS_OPTIONS.map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => { setStatusFilter(opt); setStatusOpen(false); }}
-                    className={`flex w-full items-center px-4 py-2 text-xs transition-all ${
-                      statusFilter === opt
-                        ? 'text-primary bg-primary/10'
-                        : 'text-text-secondary hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {/* Filters Group */}
+        <div className="flex flex-row gap-3 w-full md:w-auto">
+          {/* Status filter */}
+          <div className="relative flex-1 md:flex-none" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => { setStatusOpen((v) => !v); setCategoryOpen(false); }}
+              className={`flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-medium transition-all ${
+                statusFilter !== 'All Status'
+                  ? 'border-primary/40 bg-primary/10 text-primary'
+                  : 'border-white/5 bg-surface/30 text-text-secondary hover:text-white'
+              }`}
+            >
+              <Filter size={14} className="shrink-0" />
+              <span className="truncate">{statusFilter}</span>
+            </button>
+            <AnimatePresence>
+              {statusOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  className="absolute right-0 top-full z-50 mt-2 w-40 rounded-xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-xl overflow-hidden py-1"
+                >
+                  {STATUS_OPTIONS.map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => { setStatusFilter(opt); setStatusOpen(false); }}
+                      className={`flex w-full items-center px-4 py-2 text-xs transition-all ${
+                        statusFilter === opt
+                          ? 'text-primary bg-primary/10'
+                          : 'text-text-secondary hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-        {/* Category filter */}
-        <div className="relative" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={() => { setCategoryOpen((v) => !v); setStatusOpen(false); }}
-            className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-medium transition-all ${
-              categoryFilter !== 'All Categories'
-                ? 'border-primary/40 bg-primary/10 text-primary'
-                : 'border-white/5 bg-surface/30 text-text-secondary hover:text-white'
-            }`}
-          >
-            <Layers size={14} />
-            {categoryFilter === 'All Categories' ? 'Categories' : categoryFilter}
-          </button>
-          <AnimatePresence>
-            {categoryOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                className="absolute right-0 top-full z-50 mt-2 w-52 rounded-xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-xl overflow-hidden py-1"
-              >
-                {CATEGORY_OPTIONS.map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => { setCategoryFilter(opt); setCategoryOpen(false); }}
-                    className={`flex w-full items-center px-4 py-2 text-xs transition-all ${
-                      categoryFilter === opt
-                        ? 'text-primary bg-primary/10'
-                        : 'text-text-secondary hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Category filter */}
+          <div className="relative flex-1 md:flex-none" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => { setCategoryOpen((v) => !v); setStatusOpen(false); }}
+              className={`flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-medium transition-all ${
+                categoryFilter !== 'All Categories'
+                  ? 'border-primary/40 bg-primary/10 text-primary'
+                  : 'border-white/5 bg-surface/30 text-text-secondary hover:text-white'
+              }`}
+            >
+              <Layers size={14} className="shrink-0" />
+              <span className="truncate">{categoryFilter === 'All Categories' ? 'Categories' : categoryFilter}</span>
+            </button>
+            <AnimatePresence>
+              {categoryOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  className="absolute right-0 top-full z-50 mt-2 w-52 rounded-xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-xl overflow-hidden py-1"
+                >
+                  {CATEGORY_OPTIONS.map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => { setCategoryFilter(opt); setCategoryOpen(false); }}
+                      className={`flex w-full items-center px-4 py-2 text-xs transition-all ${
+                        categoryFilter === opt
+                          ? 'text-primary bg-primary/10'
+                          : 'text-text-secondary hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
 import { Outlet, useLocation } from "react-router-dom";
@@ -6,6 +6,7 @@ import { Outlet, useLocation } from "react-router-dom";
 export default function DashboardLayout() {
   const location = useLocation();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Scroll content area back to top on every route change
   useEffect(() => {
@@ -30,9 +31,9 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-black text-white">
-      <Sidebar />
-      <div ref={scrollRef} className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-        <Header title={getHeaderTitle()} />
+      <Sidebar mobileOpen={isSidebarOpen} setMobileOpen={setIsSidebarOpen} />
+      <div ref={scrollRef} className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden relative">
+        <Header title={getHeaderTitle()} setMobileSidebarOpen={setIsSidebarOpen} />
         <main>
           <Outlet />
         </main>

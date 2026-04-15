@@ -811,7 +811,7 @@ export default function Workflows() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
 
       {/* ── Header ── */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -840,7 +840,7 @@ export default function Workflows() {
       </div>
 
       {/* ── Metric Cards ── */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {METRICS.map((item, i) => (
           <MetricCard key={item.label} item={item} delay={i * 0.07} />
         ))}
@@ -848,12 +848,12 @@ export default function Workflows() {
 
       {/* ── Mission Timeline (Gantt) ── */}
       <div className="rounded-2xl border border-white/5 bg-surface/30 p-6 backdrop-blur-md">
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between items-start gap-4">
           <div>
             <h3 className="text-base font-bold text-white font-heading">Mission Timeline</h3>
             <p className="text-xs text-text-secondary mt-0.5">Task dependency map · Sprint Q2</p>
           </div>
-          <div className="flex items-center gap-5 text-[10px] text-text-secondary uppercase font-mono">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[10px] text-text-secondary uppercase font-mono">
             {(['done', 'running', 'planned', 'blocked'] as const).map((s) => {
               const colors: Record<string, string> = { done: 'bg-success', running: 'bg-primary', planned: 'bg-white/20', blocked: 'bg-danger/40' };
               return (
@@ -866,76 +866,76 @@ export default function Workflows() {
           </div>
         </div>
 
-        <div className="space-y-5">
-          {GANTT_TASKS.map((task, i) => (
-            <motion.div
-              key={task.name}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-              className="group cursor-pointer"
-            >
-              <div className="mb-2 flex items-center justify-between text-xs font-medium gap-3">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className={`flex h-5 w-5 items-center justify-center rounded-full text-[8px] font-bold text-white bg-gradient-to-br ${
-                    task.status === 'done' ? 'from-success/70 to-success' :
-                    task.status === 'running' ? 'from-primary/70 to-primary' :
-                    task.status === 'blocked' ? 'from-danger/70 to-danger' :
-                    'from-white/10 to-white/20'
-                  }`}>
-                    {task.ownerInitials}
+        {/* Gantt Scroll Container */}
+        <div className="overflow-x-auto pb-6 scrollbar-thin">
+          <div className="min-w-[900px] space-y-6">
+            {GANTT_TASKS.map((task, i) => (
+              <motion.div
+                key={task.name}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="group cursor-pointer"
+              >
+                <div className="mb-2 flex items-center justify-between text-xs font-medium gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className={`flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold text-white bg-gradient-to-br ${
+                      task.status === 'done' ? 'from-success/70 to-success' :
+                      task.status === 'running' ? 'from-primary/70 to-primary' :
+                      task.status === 'blocked' ? 'from-danger/70 to-danger' :
+                      'from-white/10 to-white/20'
+                    }`}>
+                      {task.ownerInitials}
+                    </div>
+                    <span className="text-white text-sm group-hover:text-primary transition-colors truncate">{task.name}</span>
+                    {task.status === 'running' && (
+                      <span className="flex items-center gap-1.5 text-primary text-[10px] font-mono">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                        running
+                      </span>
+                    )}
+                    {task.status === 'blocked' && (
+                      <span className="text-danger text-[10px] font-mono font-semibold">⚠ blocked</span>
+                    )}
                   </div>
-                  <span className="text-white group-hover:text-primary transition-colors truncate">{task.name}</span>
-                  {task.status === 'running' && (
-                    <span className="flex items-center gap-1 text-primary text-[9px] font-mono">
-                      <span className="h-1 w-1 rounded-full bg-primary animate-pulse" />
-                      running
-                    </span>
-                  )}
-                  {task.status === 'blocked' && (
-                    <span className="text-danger text-[9px] font-mono">⚠ blocked</span>
-                  )}
+                  <div className="flex items-center gap-4 flex-shrink-0 text-text-secondary font-mono text-[11px]">
+                    <span className="text-white font-bold">{task.progress}%</span>
+                    <span className="flex items-center gap-1.5 opacity-60"><Clock size={11} />{task.due}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 flex-shrink-0 text-text-secondary font-mono">
-                  <span>{task.progress}%</span>
-                  <span className="flex items-center gap-1"><Clock size={10} />{task.due}</span>
-                </div>
-              </div>
-              <div className="relative h-3 w-full rounded-full bg-white/5 overflow-hidden">
-                {/* Track bar */}
-                <motion.div
-                  initial={{ width: 0, left: `${task.start}%` }}
-                  animate={{ width: `${task.width}%`, left: `${task.start}%` }}
-                  transition={{ duration: 0.9, delay: i * 0.09, ease: 'easeOut' }}
-                  className={`absolute h-full rounded-full border ${GANTT_STATUS_COLORS[task.status]}`}
-                >
-                  {/* Fill */}
+                <div className="relative h-4 w-full rounded-full bg-white/5 border border-white/[0.02] overflow-hidden">
                   <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${task.progress}%` }}
-                    transition={{ duration: 1, delay: i * 0.09 + 0.3 }}
-                    className={`h-full rounded-full ${GANTT_FILL_COLORS[task.status]}`}
-                  />
-                  {/* Running shimmer */}
-                  {task.status === 'running' && (
+                    initial={{ width: 0, left: `${task.start}%` }}
+                    animate={{ width: `${task.width}%`, left: `${task.start}%` }}
+                    transition={{ duration: 0.9, delay: i * 0.09, ease: 'easeOut' }}
+                    className={`absolute h-full rounded-full border ${GANTT_STATUS_COLORS[task.status]}`}
+                  >
                     <motion.div
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-                      style={{ width: '40%', left: 0 }}
-                      className="absolute inset-y-0 rounded-full bg-white/10"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${task.progress}%` }}
+                      transition={{ duration: 1, delay: i * 0.09 + 0.3 }}
+                      className={`h-full rounded-full ${GANTT_FILL_COLORS[task.status]}`}
                     />
-                  )}
-                </motion.div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Week markers */}
-        <div className="mt-4 flex justify-between text-[9px] font-mono uppercase tracking-widest text-text-secondary/50 px-px">
-          {['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4', 'Wk 5', 'Wk 6', 'Wk 7', 'Wk 8', 'Wk 9', 'Wk 10'].map((w) => (
-            <span key={w}>{w}</span>
-          ))}
+                    {task.status === 'running' && (
+                      <motion.div
+                        animate={{ x: ['-100%', '200%'] }}
+                        transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                        style={{ width: '40%', left: 0 }}
+                        className="absolute inset-y-0 rounded-full bg-white/[0.15]"
+                      />
+                    )}
+                  </motion.div>
+                </div>
+              </motion.div>
+            ))}
+            
+            {/* Week markers within scroll */}
+            <div className="mt-4 flex justify-between text-[9px] font-mono uppercase tracking-widest text-text-secondary/50 px-px">
+              {['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4', 'Wk 5', 'Wk 6', 'Wk 7', 'Wk 8', 'Wk 9', 'Wk 10'].map((w) => (
+                <span key={w}>{w}</span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

@@ -284,7 +284,7 @@ export default function Team() {
   };
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-2xl font-bold text-white font-heading ">Team Hub </h2>
@@ -300,7 +300,7 @@ export default function Team() {
       </div>
 
       {/* Team Stats */}
-      <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
+      <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {teamStats.map((stat, i) => (
           <motion.div
             key={i}
@@ -334,29 +334,29 @@ export default function Team() {
                animate={{ opacity: 1, x: 0 }}
                exit={{ opacity: 0, scale: 0.9 }}
                transition={{ duration: 0.4, delay: i < 5 ? i * 0.1 : 0 }}
-               className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-white/5 bg-surface/30 p-4 backdrop-blur-md hover:border-white/10 transition-all"
+               className="group flex flex-col md:flex-row md:items-center justify-between gap-6 rounded-2xl border border-white/5 bg-surface/30 p-5 backdrop-blur-md hover:border-white/10 transition-all"
              >
                 <div className="flex items-center gap-4">
-                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary font-bold border border-primary/20">
+                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary font-bold border border-primary/20">
                       {member.avatar}
                    </div>
-                   <div>
-                      <h4 className="font-bold text-white group-hover:text-primary transition-colors">{member.name}</h4>
-                      <p className="text-[11px] text-text-secondary font-medium">{member.role}</p>
+                   <div className="min-w-0">
+                      <h4 className="font-bold text-white group-hover:text-primary transition-colors truncate">{member.name}</h4>
+                      <p className="text-[11px] text-text-secondary font-medium truncate">{member.role}</p>
                    </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 sm:gap-8">
+                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-4 sm:gap-8 border-t border-white/5 pt-4 md:border-0 md:pt-0">
                    <div className="flex flex-col">
                       <span className="text-[9px] uppercase tracking-widest text-text-secondary mb-1">Efficiency</span>
                       <div className="flex items-center gap-2">
                          <span className="text-sm font-bold text-white">{member.efficiency}%</span>
-                         <div className="h-1 w-12 rounded-full bg-white/5 overflow-hidden">
+                         <div className="h-1 w-12 rounded-full bg-white/5 overflow-hidden hidden xs:block">
                             <motion.div 
-                              className="h-full bg-primary" 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${member.efficiency}%` }}
-                              transition={{ duration: 1, ease: "easeOut" }}
+                               className="h-full bg-primary" 
+                               initial={{ width: 0 }}
+                               animate={{ width: `${member.efficiency}%` }}
+                               transition={{ duration: 1, ease: "easeOut" }}
                             />
                          </div>
                       </div>
@@ -367,10 +367,13 @@ export default function Team() {
                         {member.tasks} <span className="text-[10px] text-text-secondary font-normal">nodes</span>
                       </span>
                    </div>
-                   <Badge status={member.status as any} />
-                   <button className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 text-text-secondary hover:text-white transition-all">
-                      <MessageSquare size={16} />
-                   </button>
+                   
+                   <div className="flex flex-1 items-center justify-end gap-3 min-w-fit">
+                      <Badge status={member.status as any} />
+                      <button className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 text-text-secondary hover:text-white transition-all shrink-0">
+                         <MessageSquare size={16} />
+                      </button>
+                   </div>
                 </div>
              </motion.div>
            ))}

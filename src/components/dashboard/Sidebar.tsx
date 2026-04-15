@@ -10,10 +10,12 @@ import {
   LogOut,
   GitBranch,
   Users,
-  Workflow
+  Workflow,
+  Menu,
+  X
 } from "lucide-react";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 
 const menuItems = [
@@ -26,11 +28,21 @@ const menuItems = [
   { name: "Automations", icon: Workflow, href: "/automations" },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  setMobileOpen?: (open: boolean) => void;
+}
+
+export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    if (setMobileOpen) setMobileOpen(false);
+  }, [location.pathname]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -43,10 +55,15 @@ export default function Sidebar() {
     return firstName.substring(0, 2).toUpperCase();
   };
 
-  return (
+  const sidebarContent = (
     <motion.aside
-      animate={{ width: collapsed ? 80 : 280 }}
-      className="relative flex h-screen flex-col border-r border-white/5 bg-surface/50 backdrop-blur-xl transition-all overflow-hidden"
+      initial={mobileOpen ? { x: -280 } : false}
+      animate={{ 
+        width: collapsed ? 80 : 280,
+        x: 0
+      }}
+      exit={{ x: -280 }}
+      className={`relative flex h-full flex-col border-r border-white/5 bg-background shadow-2xl lg:shadow-none lg:bg-surface/50 backdrop-blur-xl transition-all overflow-hidden z-[60]`}
     >
       <div className="flex pt-8 pb-4 items-center justify-between px-6 shrink-0">
         {!collapsed && (
@@ -56,7 +73,6 @@ export default function Sidebar() {
               alt="Buildorai Logo"
               className="h-12 w-auto"
             />
-            
           </Link>
         )}
         {collapsed && (
@@ -68,11 +84,21 @@ export default function Sidebar() {
             />
           </Link>
         )}
+        
+        {/* Desktop Toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-10 flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-surface text-text-secondary hover:text-white"
+          className="hidden lg:flex absolute -right-3 top-10 h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-surface text-text-secondary hover:text-white"
         >
           {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+        </button>
+
+        {/* Mobile Close Button */}
+        <button
+          onClick={() => setMobileOpen?.(false)}
+          className="lg:hidden p-2 text-text-secondary hover:text-white"
+        >
+          <X size={24} />
         </button>
       </div>
 
@@ -89,14 +115,13 @@ export default function Sidebar() {
                 }`}
             >
               <item.icon size={20} className="shrink-0" />
-              {!collapsed && <span className="font-medium">{item.name}</span>}
+              {!collapsed && <span className="font-medium whitespace-nowrap">{item.name}</span>}
             </Link>
           );
         })}
       </nav>
 
       <div className="mt-auto space-y-4 p-4">
-        {/* Profile Section */}
         <div className={`flex items-center gap-3 rounded-2xl p-2 transition-all ${
           collapsed ? 'justify-center bg-transparent' : 'bg-white/5 border border-white/5 shadow-lg'
         }`}>
@@ -108,7 +133,6 @@ export default function Sidebar() {
                  getUserInitials()
                )}
             </div>
-            {/* Online Pulse Indicator */}
             <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0c0e14] bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]">
                <div className="h-full w-full rounded-full bg-success animate-ping opacity-75" />
             </div>
@@ -137,5 +161,35 @@ export default function Sidebar() {
         </button>
       </div>
     </motion.aside>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:flex h-full">
+        {sidebarContent}
+      </div>
+
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <div className="fixed inset-0 z-[100] lg:hidden">
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileOpen?.(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            
+            {/* Content Wrapper (needed to prevent width animation fighting with fixed pos) */}
+            <div className="relative h-full w-[280px]">
+              {sidebarContent}
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
