@@ -76,19 +76,19 @@ export default function Sidebar() {
         </button>
       </div>
 
-      <nav className="flex-1 space-y-2 px-4 py-8 overflow-y-auto scrollbar-thin">
+      <nav className={`flex-1 space-y-2 ${collapsed ? "px-2" : "px-4"} py-8 overflow-y-auto scrollbar-thin`}>
         {menuItems.map((item) => {
           const active = location.pathname === item.href;
           return (
             <Link
               key={item.href}
               to={item.href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-all ${active
+              className={`flex items-center rounded-xl p-3 transition-all ${collapsed ? "justify-center" : "gap-3 px-4"} ${active
                 ? "bg-primary/10 text-primary"
                 : "text-text-secondary hover:bg-white/5 hover:text-white"
                 }`}
             >
-              <item.icon size={20} />
+              <item.icon size={20} className="shrink-0" />
               {!collapsed && <span className="font-medium">{item.name}</span>}
             </Link>
           );
@@ -130,9 +130,9 @@ export default function Sidebar() {
 
         <button 
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-danger/80 transition-all hover:bg-danger/10 hover:text-danger"
+          className={`flex w-full items-center rounded-xl p-3 text-danger/80 transition-all hover:bg-danger/10 hover:text-danger ${collapsed ? "justify-center" : "gap-3 px-4"}`}
         >
-          <LogOut size={20} />
+          <LogOut size={20} className="shrink-0" />
           {!collapsed && <span className="font-medium">Sign Out</span>}
         </button>
       </div>

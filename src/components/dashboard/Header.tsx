@@ -2,6 +2,7 @@ import { Bell, User, X, CheckCheck, LogOut, Settings, ChevronDown } from "lucide
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import ProfileModal from "./ProfileModal";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface Notification {
@@ -88,6 +89,7 @@ export default function Header({ title }: { title: string }) {
     useState<Notification[]>(INITIAL_NOTIFICATIONS);
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -114,7 +116,8 @@ export default function Header({ title }: { title: string }) {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
 
   return (
-    <header className="flex pt-8 pb-4 items-center justify-between border-b border-white/5 bg-background/50 px-4 sm:px-8 backdrop-blur-md relative z-50">
+    <>
+      <header className="flex pt-8 pb-4 items-center justify-between border-b border-white/5 bg-background/50 px-4 sm:px-8 backdrop-blur-md relative z-50">
       {/* ── Left: Page title ── */}
       <div>
         <h1 className="text-xl font-bold text-white font-heading">{title}</h1>
@@ -286,17 +289,21 @@ export default function Header({ title }: { title: string }) {
                 </p>
               </div>
 
-              {/* Menu items */}
-              <div className="py-1">
-                <button
-                  id="profile-view-btn"
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-all"
-                >
-                  <User size={16} />
-                  Profile
-                </button>
-                
-              </div>
+                {/* Menu items */}
+                <div className="py-1">
+                  <button
+                    id="profile-view-btn"
+                    onClick={() => {
+                      setProfileModalOpen(true);
+                      setProfileOpen(false);
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-all"
+                  >
+                    <User size={16} />
+                    Profile
+                  </button>
+                  
+                </div>
 
               <div className="border-t border-white/5 py-1">
                 <button
@@ -312,6 +319,12 @@ export default function Header({ title }: { title: string }) {
           )}
         </div>
       </div>
-    </header>
+      </header>
+      
+      <ProfileModal 
+        isOpen={profileModalOpen} 
+        onClose={() => setProfileModalOpen(false)} 
+      />
+    </>
   );
 }
