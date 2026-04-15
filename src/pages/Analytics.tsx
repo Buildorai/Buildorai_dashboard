@@ -23,7 +23,7 @@ export default function Analytics() {
   return (
     <div className="p-4 md:p-8">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white font-heading underline underline-offset-8 decoration-primary/40">Performance Telemetry</h2>
+        <h2 className="text-2xl font-bold text-white font-heading ">Performance Telemetry</h2>
         <p className="mt-1 text-sm text-text-secondary">AI-driven insights into project orchestration efficiency.</p>
       </div>
 

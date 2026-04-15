@@ -46,7 +46,7 @@ export default function DataCore() {
     <div className="p-4 md:p-8">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-2xl font-bold text-white font-heading underline underline-offset-8 decoration-primary/40">Data Core Telemetry</h2>
+          <h2 className="text-2xl font-bold text-white font-heading ">Data Core Telemetry</h2>
           <p className="mt-1 text-sm text-text-secondary">Low-latency system-level orchestration monitoring.</p>
         </div>
         <div className="flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2">

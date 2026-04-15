@@ -193,7 +193,7 @@ export default function DashboardOverview() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white font-heading">
-            Good morning, Alex 👋
+            Hello Alex,
           </h2>
           <p className="mt-1 text-sm text-text-secondary">
             Here's a live snapshot of your command center.
