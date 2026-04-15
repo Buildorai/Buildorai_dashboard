@@ -37,7 +37,7 @@ export default function Sidebar() {
     >
       <div className="flex pt-8 pb-4 items-center justify-between px-6">
         {!collapsed && (
-          <Link to="/" className="flex items-center gap-3 text-xl font-bold text-white font-heading transition-opacity hover:opacity-80">
+          <Link to="/overview" className="flex items-center gap-3 text-xl font-bold text-white font-heading transition-opacity hover:opacity-80">
             <img
               src="/Logo.svg"
               alt="Buildorai Logo"
@@ -47,7 +47,7 @@ export default function Sidebar() {
           </Link>
         )}
         {collapsed && (
-          <Link to="/" className="mx-auto flex transition-opacity hover:opacity-80">
+          <Link to="/overview" className="mx-auto flex transition-opacity hover:opacity-80">
             <img
               src="/favicon.svg"
               alt="Buildorai"
@@ -57,9 +57,9 @@ export default function Sidebar() {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-surface text-text-secondary hover:text-white"
+          className="absolute -right-3 top-10 flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-surface text-text-secondary hover:text-white"
         >
-          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
       </div>
 
