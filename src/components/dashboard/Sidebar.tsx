@@ -1,5 +1,4 @@
-// === Dashboard: Sidebar component ===
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
   BarChart3,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
 
 const menuItems = [
   { name: "Overview", icon: Home, href: "/overview" },
@@ -28,7 +28,20 @@ const menuItems = [
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/signin");
+  };
+
+  const getUserInitials = () => {
+    if (!user?.displayName) return user?.email?.substring(0, 2).toUpperCase() || "AD";
+    const firstName = user.displayName.split(" ")[0];
+    return firstName.substring(0, 2).toUpperCase();
+  };
 
   return (
     <motion.aside
@@ -89,7 +102,11 @@ export default function Sidebar() {
         }`}>
           <div className="relative h-10 w-10 shrink-0">
             <div className="flex h-full w-full items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 font-bold text-white shadow-lg overflow-hidden">
-               ST
+               {user?.photoURL ? (
+                 <img src={user.photoURL} alt={user.displayName || "User"} className="h-full w-full object-cover" />
+               ) : (
+                 getUserInitials()
+               )}
             </div>
             {/* Online Pulse Indicator */}
             <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0c0e14] bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]">
@@ -103,13 +120,18 @@ export default function Sidebar() {
               animate={{ opacity: 1, x: 0 }}
               className="flex flex-col min-w-0"
             >
-              <span className="truncate text-sm font-bold text-white">S. Thanushan</span>
-              <span className="truncate text-[10px] text-text-secondary uppercase tracking-widest font-mono">System Architect</span>
+              <span className="truncate text-sm font-bold text-white">{user?.displayName || "User"}</span>
+              <span className="truncate text-[10px] text-text-secondary uppercase tracking-widest font-mono">
+                {user?.email?.split('@')[0] || "Architect"}
+              </span>
             </motion.div>
           )}
         </div>
 
-        <button className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-danger/80 transition-all hover:bg-danger/10 hover:text-danger">
+        <button 
+          onClick={handleSignOut}
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-danger/80 transition-all hover:bg-danger/10 hover:text-danger"
+        >
           <LogOut size={20} />
           {!collapsed && <span className="font-medium">Sign Out</span>}
         </button>

@@ -1,7 +1,7 @@
-// === Dashboard: Header component ===
-"use client";
 import { Bell, User, X, CheckCheck, LogOut, Settings, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface Notification {
@@ -82,6 +82,8 @@ function useOutsideClick(
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function Header({ title }: { title: string }) {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [notifications, setNotifications] =
     useState<Notification[]>(INITIAL_NOTIFICATIONS);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -89,6 +91,11 @@ export default function Header({ title }: { title: string }) {
 
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/signin");
+  };
 
   // Close both dropdowns on outside click
   useOutsideClick([notifRef, profileRef], () => {
@@ -245,11 +252,17 @@ export default function Header({ title }: { title: string }) {
             aria-label="Profile menu"
           >
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-white">Alex Rivera</p>
-              <p className="text-xs text-text-secondary">System Admin</p>
+              <p className="text-sm font-medium text-white">{user?.displayName || "User"}</p>
+              <p className="text-xs text-text-secondary uppercase tracking-widest text-[10px]">
+                {user?.email?.split('@')[0] || "Admin"}
+              </p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20 text-primary">
-              <User size={20} />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20 text-primary overflow-hidden">
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt={user.displayName || "User"} className="h-full w-full object-cover" />
+              ) : (
+                <User size={20} />
+              )}
             </div>
             <ChevronDown
               size={15}
@@ -263,13 +276,13 @@ export default function Header({ title }: { title: string }) {
           {profileOpen && (
             <div
               id="profile-dropdown"
-              className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden py-2"
+              className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden py-2"
             >
               {/* User info */}
               <div className="px-4 py-3 border-b border-white/5">
-                <p className="text-sm font-semibold text-white">Alex Rivera</p>
-                <p className="text-xs text-text-secondary mt-0.5">
-                  alex@buildorai.com
+                <p className="text-sm font-semibold text-white">{user?.displayName || "User"}</p>
+                <p className="text-xs text-text-secondary mt-0.5 truncate">
+                  {user?.email}
                 </p>
               </div>
 
@@ -288,7 +301,8 @@ export default function Header({ title }: { title: string }) {
               <div className="border-t border-white/5 py-1">
                 <button
                   id="logout-btn"
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-danger/80 hover:text-danger hover:bg-danger/10 transition-all"
+                  onClick={handleSignOut}
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-danger/80 hover:text-danger hover:bg-danger/10 transition-all font-medium"
                 >
                   <LogOut size={16} />
                   Sign Out

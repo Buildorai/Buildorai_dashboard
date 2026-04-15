@@ -177,8 +177,11 @@ const ActivityDot = ({ status }: { status: string }) => {
   );
 };
 
+import { useAuth } from "../context/AuthContext";
+
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function DashboardOverview() {
+  const { user } = useAuth();
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = () => {
@@ -193,7 +196,7 @@ export default function DashboardOverview() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white font-heading">
-            Hello Alex,
+            Hello {user?.displayName || user?.email?.split('@')[0] || "User"},
           </h2>
           <p className="mt-1 text-sm text-text-secondary">
             Here's a live snapshot of your command center.
@@ -293,25 +296,28 @@ export default function DashboardOverview() {
           </div>
 
           <div className="space-y-4 flex-1">
-            {ACTIVITIES.map((a, i) => (
-              <motion.div
-                key={a.id}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.07 }}
-                className="flex gap-3"
-              >
-                <ActivityDot status={a.status} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-white leading-relaxed">
-                    <span className="font-semibold">{a.user}</span>{" "}
-                    <span className="text-text-secondary">{a.action}</span>{" "}
-                    <span className="text-primary">{a.target}</span>
-                  </p>
-                  <p className="text-[11px] text-text-secondary/60 mt-0.5">{a.time}</p>
-                </div>
-              </motion.div>
-            ))}
+            {ACTIVITIES.map((a, i) => {
+              const displayName = a.user === "Alex Rivera" ? (user?.displayName || user?.email?.split('@')[0] || "User") : a.user;
+              return (
+                <motion.div
+                  key={a.id}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07 }}
+                  className="flex gap-3"
+                >
+                  <ActivityDot status={a.status} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-white leading-relaxed">
+                      <span className="font-semibold">{displayName}</span>{" "}
+                      <span className="text-text-secondary">{a.action}</span>{" "}
+                      <span className="text-primary">{a.target}</span>
+                    </p>
+                    <p className="text-[11px] text-text-secondary/60 mt-0.5">{a.time}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
           <button className="mt-5 w-full rounded-xl border border-white/5 py-2 text-xs text-text-secondary hover:text-white hover:bg-white/5 transition-all">

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
@@ -256,8 +257,27 @@ function ProvisionModal({ isOpen, onClose, onProvision }: { isOpen: boolean, onC
 }
 
 export default function Team() {
+  const { user } = useAuth();
   const [members, setMembers] = useState(INITIAL_MEMBERS);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setMembers(prev => prev.map(m => {
+        if (m.name === 'Alex Rivera') {
+          const initials = user.displayName 
+            ? user.displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
+            : user.email?.charAt(0).toUpperCase() || "U";
+          return {
+            ...m,
+            name: user.displayName || user.email?.split('@')[0] || "User",
+            avatar: initials
+          };
+        }
+        return m;
+      }));
+    }
+  }, [user]);
 
   const handleProvisionMember = (newMember: any) => {
     setMembers([newMember, ...members]);

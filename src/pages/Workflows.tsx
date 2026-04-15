@@ -1,5 +1,6 @@
 // === Dashboard: Workflows Page ===
 import { useState, useEffect, useRef } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GitBranch,
@@ -78,8 +79,8 @@ const WORKFLOWS: Workflow[] = [
     completedTasks: 21,
     duration: '4h 32m',
     lastRun: '2 min ago',
-    owner: 'Alex Rivera',
-    initials: 'AR',
+    owner: userName,
+    initials: userInitials,
     avatarColor: 'from-blue-500 to-primary',
     executions: 1248,
     successRate: 98.7,
@@ -158,8 +159,8 @@ const GANTT_TASKS: GanttTask[] = [
     start: 0,
     width: 18,
     status: 'done',
-    owner: 'Alex Rivera',
-    ownerInitials: 'AR',
+    owner: userName,
+    ownerInitials: userInitials,
     due: 'Apr 5',
   },
   {
@@ -762,6 +763,12 @@ function WorkflowRow({
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function Workflows() {
+  const { user } = useAuth();
+  const userName = user?.displayName || user?.email?.split('@')[0] || "User";
+  const userInitials = user?.displayName 
+    ? user.displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
+    : user?.email?.charAt(0).toUpperCase() || "U";
+
   const [activeFilter, setActiveFilter] = useState<WorkflowStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>('wf-001');

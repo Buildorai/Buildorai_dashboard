@@ -8,28 +8,43 @@ import Analytics from "./pages/Analytics";
 import DataCore from "./pages/DataCore";
 import Automations from "./pages/Automations";
 
+import SignIn from "./pages/auth/SignIn";
+import SignUp from "./pages/auth/SignUp";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Redirect root to dashboard overview */}
-        <Route path="/" element={<Navigate to="/overview" replace />} />
-        
-        {/* Dashboard Routes */}
-        <Route element={<DashboardLayout />}>
-          <Route path="/overview" element={<DashboardOverview />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/workflows" element={<Workflows />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/data" element={<DataCore />} />
-          <Route path="/automations" element={<Automations />} />
-        </Route>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Auth Routes */}
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
 
-        {/* Catch-all route */}
-        <Route path="*" element={<Navigate to="/overview" replace />} />
-      </Routes>
-    </Router>
+          {/* Redirect root to dashboard overview */}
+          <Route path="/" element={<Navigate to="/overview" replace />} />
+          
+          {/* Protected Dashboard Routes */}
+          <Route element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }>
+            <Route path="/overview" element={<DashboardOverview />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/workflows" element={<Workflows />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/data" element={<DataCore />} />
+            <Route path="/automations" element={<Automations />} />
+          </Route>
+
+          {/* Catch-all route */}
+          <Route path="*" element={<Navigate to="/overview" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
