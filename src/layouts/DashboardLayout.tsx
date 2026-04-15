@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
 import { Outlet, useLocation } from "react-router-dom";
 
 export default function DashboardLayout() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const location = useLocation();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Scroll content area back to top on every route change
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   // Map routes to titles
   const getHeaderTitle = () => {
@@ -23,21 +30,13 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-black text-white">
-      <Sidebar isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
-      <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-        <Header title={getHeaderTitle()} setIsOpen={setIsMobileMenuOpen} />
+      <Sidebar />
+      <div ref={scrollRef} className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+        <Header title={getHeaderTitle()} />
         <main>
           <Outlet />
         </main>
       </div>
-      
-      {/* Mobile Sidebar Overlay */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
     </div>
   );
 }
