@@ -159,7 +159,7 @@ export default function Header({ title, setMobileSidebarOpen }: { title: string;
           {notifOpen && (
             <div
               id="notification-dropdown"
-              className="fixed inset-x-4 top-20 sm:absolute sm:right-0 sm:top-full sm:mt-3 sm:w-[380px] rounded-2xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden z-[100]"
+              className="fixed inset-x-4 top-20 sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-3 sm:w-[380px] rounded-2xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden z-[100]"
               style={{ maxHeight: "calc(100vh - 120px)" }}
             >
               {/* Header row */}

@@ -58,7 +58,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   const sidebarContent = (
     <motion.aside
       initial={mobileOpen ? { x: -280 } : false}
-      animate={{ 
+      animate={{
         width: collapsed ? 80 : 280,
         x: 0
       }}
@@ -84,7 +84,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
             />
           </Link>
         )}
-        
+
         {/* Desktop Toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
@@ -122,24 +122,23 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
       </nav>
 
       <div className="mt-auto space-y-4 p-4">
-        <div className={`flex items-center gap-3 rounded-2xl p-2 transition-all ${
-          collapsed ? 'justify-center bg-transparent' : 'bg-white/5 border border-white/5 shadow-lg'
-        }`}>
+        <div className={`flex items-center gap-3 rounded-2xl p-2 transition-all ${collapsed ? 'justify-center bg-transparent' : 'bg-white/5 border border-white/5 shadow-lg'
+          }`}>
           <div className="relative h-10 w-10 shrink-0">
             <div className="flex h-full w-full items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 font-bold text-white shadow-lg overflow-hidden">
-               {user?.photoURL ? (
-                 <img src={user.photoURL} alt={user.displayName || "User"} className="h-full w-full object-cover" />
-               ) : (
-                 getUserInitials()
-               )}
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt={user.displayName || "User"} className="h-full w-full object-cover" />
+              ) : (
+                getUserInitials()
+              )}
             </div>
             <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0c0e14] bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]">
-               <div className="h-full w-full rounded-full bg-success animate-ping opacity-75" />
+              <div className="h-full w-full rounded-full bg-success animate-ping opacity-75" />
             </div>
           </div>
-          
+
           {!collapsed && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               className="flex flex-col min-w-0"
@@ -152,7 +151,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
           )}
         </div>
 
-        <button 
+        <button
           onClick={handleSignOut}
           className={`flex w-full items-center rounded-xl p-3 text-danger/80 transition-all hover:bg-danger/10 hover:text-danger ${collapsed ? "justify-center" : "gap-3 px-4"}`}
         >
@@ -182,7 +181,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
               onClick={() => setMobileOpen?.(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
-            
+
             {/* Content Wrapper (needed to prevent width animation fighting with fixed pos) */}
             <div className="relative h-full w-[280px]">
               {sidebarContent}
