@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle, Check, Circle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
@@ -13,12 +13,28 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  const passwordRequirements = [
+    { id: 'length', label: '8+ characters', regex: /.{8,}/ },
+    { id: 'uppercase', label: 'Uppercase letter', regex: /[A-Z]/ },
+    { id: 'lowercase', label: 'Lowercase letter', regex: /[a-z]/ },
+    { id: 'number', label: 'Number', regex: /[0-9]/ },
+    { id: 'special', label: 'Special character', regex: /[^A-Za-z0-9]/ },
+  ];
+
+  const isPasswordValid = passwordRequirements.every(req => req.regex.test(password));
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+
+    if (!isPasswordValid) {
+      setError("Please ensure all password requirements are met.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -90,7 +106,7 @@ export default function SignUp() {
               transition={{ delay: 0.2 }}
               className="h-auto w-32 md:w-48"
             >
-              <img src="/Logo.svg" alt="Buildorai" className="h-full w-full object-contain mt-2" />
+              <img src="/Logo-New.svg" alt="Buildorai" className="h-full w-full object-contain mt-2" />
             </motion.div>
             <h1 className="text-3xl font-bold tracking-tight text-white font-heading sm:text-4xl">
               Create Account
@@ -135,7 +151,7 @@ export default function SignUp() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="S. Thanushan"
+                    placeholder="Enter your name..."
                     className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pl-12 pr-4 text-sm text-white placeholder:text-white/20 outline-none transition-all focus:border-primary/50 focus:bg-white/[0.08] focus:ring-2 focus:ring-primary/10"
                   />
                 </div>
@@ -155,7 +171,7 @@ export default function SignUp() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@buildorai.com"
+                    placeholder="Enter your email..."
                     className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pl-12 pr-4 text-sm text-white placeholder:text-white/20 outline-none transition-all focus:border-primary/50 focus:bg-white/[0.08] focus:ring-2 focus:ring-primary/10"
                   />
                 </div>
@@ -186,6 +202,40 @@ export default function SignUp() {
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
+
+                {/* Password Requirements UI */}
+                <AnimatePresence>
+                  {password.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-3 space-y-2 overflow-hidden px-1"
+                    >
+                      <div className="grid grid-cols-2 gap-2">
+                        {passwordRequirements.map((req) => {
+                          const isMet = req.regex.test(password);
+                          return (
+                            <div key={req.id} className="flex items-center gap-2">
+                              {isMet ? (
+                                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-green-500/20 text-green-400">
+                                  <Check size={10} strokeWidth={3} />
+                                </div>
+                              ) : (
+                                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-white/5 text-white/20">
+                                  <Circle size={10} strokeWidth={3} />
+                                </div>
+                              )}
+                              <span className={`text-[11px] transition-colors ${isMet ? 'text-green-400/80' : 'text-text-secondary/60'}`}>
+                                {req.label}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <motion.button

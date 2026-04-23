@@ -25,6 +25,7 @@ export default function DashboardLayout() {
       case "/analytics": return "Performance Telemetry";
       case "/data": return "Data Core Telemetry";
       case "/automations": return "AI Orchestration Center";
+      case "/settings": return "System Configuration";
       default: return "Command Center";
     }
   };

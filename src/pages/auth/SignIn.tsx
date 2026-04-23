@@ -106,7 +106,7 @@ export default function SignIn() {
               transition={{ delay: 0.2, type: "spring" }}
               className="h-auto w-32 md:w-48"
             >
-              <img src="/Logo.svg" alt="Buildorai" className="h-full w-full object-contain mt-2" />
+              <img src="/Logo-New.svg" alt="Buildorai" className="h-full w-full object-contain mt-2" />
             </motion.div>
             <h1 className="text-3xl font-bold tracking-tight text-white font-heading sm:text-4xl">
               Welcome Back
@@ -151,7 +151,7 @@ export default function SignIn() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@buildorai.com"
+                    placeholder="Enter your email"
                     className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pl-12 pr-4 text-sm text-white placeholder:text-white/20 outline-none transition-all focus:border-primary/50 focus:bg-white/[0.08] focus:ring-2 focus:ring-primary/10"
                   />
                 </div>

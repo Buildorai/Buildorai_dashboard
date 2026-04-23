@@ -26,6 +26,7 @@ const menuItems = [
   { name: "Analytics", icon: BarChart3, href: "/analytics" },
   { name: "Data Core", icon: Database, href: "/data" },
   { name: "Automations", icon: Workflow, href: "/automations" },
+  { name: "Settings", icon: Settings, href: "/settings" },
 ];
 
 interface SidebarProps {
@@ -69,7 +70,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
         {!collapsed && (
           <Link to="/overview" className="flex items-center gap-3 text-xl font-bold text-white font-heading transition-opacity hover:opacity-80">
             <img
-              src="/Logo.svg"
+              src="/Logo-New.svg"
               alt="Buildorai Logo"
               className="h-12 w-auto"
             />
@@ -78,7 +79,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
         {collapsed && (
           <Link to="/overview" className="mx-auto flex transition-opacity hover:opacity-80">
             <img
-              src="/favicon.svg"
+              src="/Favicon-New.svg"
               alt="Buildorai"
               className="h-12 w-auto"
             />

@@ -7,6 +7,7 @@ import Team from "./pages/Team";
 import Analytics from "./pages/Analytics";
 import DataCore from "./pages/DataCore";
 import Automations from "./pages/Automations";
+import SettingsPage from "./pages/Settings";
 
 import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
@@ -38,6 +39,7 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/data" element={<DataCore />} />
             <Route path="/automations" element={<Automations />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
 
           {/* Catch-all route */}
